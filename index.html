@@ -71,7 +71,7 @@
                 <input id="m" autocomplete="off" />
                 <button id="send-message">Send</button>
             </form>
-            <div id="" onclick="startStream()">Start Camera</div>  
+            <div id="start-stream" onclick="startStream()">Start Camera</div>  
         </div>
     </div>        
 
@@ -96,13 +96,13 @@
         // start the stream
         socket.on('liveStream', function(url) {
             $('#stream').attr('src', url);
-            $('.start').hide();
+            $('#start-stream').hide();
         });
 
         function startStream(event) {
             // event.preventDefault();
             socket.emit('start-stream');
-            $('.start').hide();
+            $('#start-stream').hide();
         }
     </script>
 </body>
