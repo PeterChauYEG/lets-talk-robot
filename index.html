@@ -44,7 +44,7 @@
         }
 
         #log {
-            width: 200px;
+            width: 25vw;
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -57,11 +57,17 @@
             /*justify-content: space-around;*/
             flex-direction: column;
         }
+        #log-input {
+            width: 100%
+        }
         #send-message {
+            width: 100%;
             margin: 10px 0;
         }
         #start-stream {
+            width: 100%;
             margin-bottom: 10px;
+            text-align: center;
         }
         #drivetrain {
             height: 100%;
@@ -83,23 +89,34 @@
 </head>
 
 <body>
+    <!--feed-->
     <div id="feed">
         <img src="" id="stream">
     </div>
 
+    <!--side bar-->
     <div id="log">
+
+        <!--message log-->
         <ul id="messages"></ul>
+
+        <!--log control-->
         <div id="log-control">
+
+            <!--log input-->
             <form action="">
-                <input id="m" autocomplete="off" />
+                <input id="log-input" autocomplete="off" />
                 <button id="send-message">Send</button>
             </form>
+
+            <!--start stream control-->
             <div
                 id="start-stream"
                 onclick="startStream()">
                 Start Camera
             </div>
 
+            <!--drivetrain control-->
             <div id="drivetrain">
                 <div
                     id="forward"
@@ -150,8 +167,8 @@
 
         // event emitter
         $('form').submit(function() {
-            socket.emit('log message', $('#m').val());
-            $('#m').val('');
+            socket.emit('log message', $('#log-input').val());
+            $('#log-input').val('');
             return false;
         });
 
