@@ -20,10 +20,14 @@
             list-style-type: none;
             margin: 0;
             padding: 0;
+            overflow: hidden;
+            overflow-y: scroll;
+            max-height: 80vh;
         }
         
         #messages li {
             padding: 5px 10px;
+            word-break: break-word;
         }
         
         #messages li:nth-child(odd) {
@@ -48,7 +52,7 @@
             border-left: 1px black solid;
         }
         #log-control {
-            height: 200px;
+            height: 20vh;
             display: flex;
             /*justify-content: space-around;*/
             flex-direction: column;            
@@ -91,6 +95,7 @@
         // receive the message
         socket.on('log message', function(msg) {
             $('#messages').append($('<li>').text(msg));
+            $('#messages').scrollTop($('#messages').height())         
         });
 
         // start the stream
