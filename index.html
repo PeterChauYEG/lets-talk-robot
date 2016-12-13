@@ -9,40 +9,40 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font: 13px Helvetica, Arial;
             height: 100vh;
             display: flex;
         }
-        
+
         #messages {
             list-style-type: none;
             margin: 0;
             padding: 0;
             overflow: hidden;
             overflow-y: scroll;
-            max-height: 80vh;
+            max-height: 75vh;
         }
-        
+
         #messages li {
             padding: 5px 10px;
             word-break: break-word;
         }
-        
+
         #messages li:nth-child(odd) {
             background: #eee;
         }
-        
+
         #stream {
             height: 99%;
             margin: 0px auto;
         }
-        
+
         #feed {
             width: 100%;
         }
-        
+
         #log {
             width: 200px;
             height: 100%;
@@ -52,13 +52,32 @@
             border-left: 1px black solid;
         }
         #log-control {
-            height: 20vh;
+            height: 25vh;
             display: flex;
             /*justify-content: space-around;*/
-            flex-direction: column;            
+            flex-direction: column;
         }
         #send-message {
             margin: 10px 0;
+        }
+        #start-stream {
+            margin-bottom: 10px;
+        }
+        #drivetrain {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        #drivetrain-middle {
+            display: flex;
+            flex-direction: row-reverse;
+        }
+        .drivetrain-button {
+            height: 50px;
+            width: 50px;
         }
     </style>
 </head>
@@ -75,9 +94,53 @@
                 <input id="m" autocomplete="off" />
                 <button id="send-message">Send</button>
             </form>
-            <div id="start-stream" onclick="startStream()">Start Camera</div>  
+            <div
+                id="start-stream"
+                onclick="startStream()">
+                Start Camera
+            </div>
+
+            <div id="drivetrain">
+                <div
+                    id="forward"
+                    class="drivetrain-button"
+                    onmousedown="drivetrain('forward')"
+                    onmouseup="drivetrain('stop')">
+                    ^
+                </div>
+
+                <div id="drivetrain-middle">
+                    <div
+                        id="rotate-right"
+                        class="drivetrain-button"
+                        onmousedown="drivetrain('rotate right')"
+                        onmouseup="drivetrain('stop')">
+                        >
+                    </div>
+                    <div
+                        id="stop"
+                        class="drivetrain-button"
+                        onclick="drivetrain('stop')">
+                        stop
+                    </div>
+                    <div
+                        id="rotate-left"
+                        class="drivetrain-button"
+                        onmousedown="drivetrain('rotate left')"
+                        onmouseup="drivetrain('stop')">
+                        <
+                    </div>
+                </div>
+                <div
+                    id="backwards"
+                    class="drivetrain-button"
+                    onmousedown="drivetrain('backwards')"
+                    onmouseup="drivetrain('stop')">
+                    V
+                </div>
+            </div>
         </div>
-    </div>        
+    </div>
 
     <!--load the socket.io-client-->
     <script src="/socket.io/socket.io.js"></script>
@@ -95,7 +158,7 @@
         // receive the message
         socket.on('log message', function(msg) {
             $('#messages').append($('<li>').text(msg));
-            $('#messages').scrollTop($('#messages').height())         
+            $('#messages').scrollTop($('#messages').height())
         });
 
         // start the stream
@@ -104,8 +167,11 @@
             $('#start-stream').hide();
         });
 
-        function startStream(event) {
-            // event.preventDefault();
+        function drivetrain(direction) {
+            socket.emit('drivetrain', direction);
+        }
+
+        function startStream() {
             socket.emit('start-stream');
             $('#start-stream').hide();
         }

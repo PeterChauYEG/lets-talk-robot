@@ -34,12 +34,18 @@ io.on('connection', function(socket) {
     });
     
     socket.on('start-stream', function() {
+        io.emit('log message', 'starting video streat');
         startStreaming(io);
     });
     
     socket.on('log message', function(msg) {
         console.log('message: ' + msg);
         io.emit('log message', msg);
+    })
+    
+    socket.on('drivetrain', function(direction) {
+        console.log('drivetrain: ' + direction)
+        io.emit('log message', direction)
     })
 })
 
