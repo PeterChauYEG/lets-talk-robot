@@ -51,24 +51,29 @@
             justify-content: flex-end;
             border-left: 1px black solid;
         }
+
         #log-control {
             height: 25vh;
             display: flex;
             /*justify-content: space-around;*/
             flex-direction: column;
         }
+
         #log-input {
             width: 100%
         }
+
         #send-message {
             width: 100%;
             margin: 10px 0;
         }
+
         #start-stream {
             width: 100%;
             margin-bottom: 10px;
             text-align: center;
         }
+
         #drivetrain {
             height: 100%;
             display: flex;
@@ -77,10 +82,12 @@
             align-items: center;
             text-align: center;
         }
+
         #drivetrain-middle {
             display: flex;
             flex-direction: row-reverse;
         }
+
         .drivetrain-button {
             height: 50px;
             width: 50px;
@@ -110,89 +117,77 @@
             </form>
 
             <!--start stream control-->
-            <div
-                id="start-stream"
-                onclick="startStream()">
+            <div id="start-stream" onclick="startStream()">
                 Start Camera
+            </div>
+
+            <!--initialize-gpio-->
+            <div id="initialize-gpio" onclick="gpio('initialize')">
+                Initialize GPIO
+            </div>
+
+            <!--shutdown gpio-->
+            <div id="shutdown-gpio" onclick="gpio('shutdown')">
+                Shutdown GPIO
             </div>
 
             <!--drivetrain control-->
             <div id="drivetrain">
-                <div
-                    id="forward"
-                    class="drivetrain-button"
-                    onmousedown="drivetrain('forward')"
-                    onmouseup="drivetrain('stop')">
+                <div id="forward" class="drivetrain-button" onmousedown="gpio('forward')" onmouseup="gpio('stop')">
                     ^
                 </div>
 
                 <div id="drivetrain-middle">
-                    <div
-                        id="rotate-right"
-                        class="drivetrain-button"
-                        onmousedown="drivetrain('rotate right')"
-                        onmouseup="drivetrain('stop')">
+                    <div id="rotate-right" class="drivetrain-button" onmousedown="gpio('rotate right')" onmouseup="gpio('stop')">
                         >
                     </div>
-                    <div
-                        id="stop"
-                        class="drivetrain-button"
-                        onclick="drivetrain('stop')">
+                    <div id="stop" class="drivetrain-button" onclick="gpio('stop')">
                         stop
                     </div>
-                    <div
-                        id="rotate-left"
-                        class="drivetrain-button"
-                        onmousedown="drivetrain('rotate left')"
-                        onmouseup="drivetrain('stop')">
-                        <
+                    <div id="rotate-left" class="drivetrain-button" onmousedown="gpio('rotate left')" onmouseup="gpio('stop')">
+                        < </div>
                     </div>
-                </div>
-                <div
-                    id="backwards"
-                    class="drivetrain-button"
-                    onmousedown="drivetrain('backwards')"
-                    onmouseup="drivetrain('stop')">
-                    V
+                    <div id="backwards" class="drivetrain-button" onmousedown="gpio('backwards')" onmouseup="gpio('stop')">
+                        V
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!--load the socket.io-client-->
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script>
-        var socket = io();
+        <!--load the socket.io-client-->
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+        <script>
+            var socket = io();
 
-        // event emitter
-        $('form').submit(function() {
-            socket.emit('log message', $('#log-input').val());
-            $('#log-input').val('');
-            return false;
-        });
+            // event emitter
+            $('form').submit(function() {
+                socket.emit('log message', $('#log-input').val());
+                $('#log-input').val('');
+                return false;
+            });
 
-        // receive the message
-        socket.on('log message', function(msg) {
-            $('#messages').append($('<li>').text(msg));
-            $('#messages').scrollTop($('#messages').height())
-        });
+            // receive the message
+            socket.on('log message', function(msg) {
+                $('#messages').append($('<li>').text(msg));
+                $('#messages').scrollTop($('#messages').height())
+            });
 
-        // start the stream
-        socket.on('liveStream', function(url) {
-            $('#stream').attr('src', url);
-            $('#start-stream').hide();
-        });
+            // start the stream
+            socket.on('liveStream', function(url) {
+                $('#stream').attr('src', url);
+                $('#start-stream').hide();
+            });
 
-        function drivetrain(direction) {
-            socket.emit('drivetrain', direction);
-        }
+            function gpio(req) {
+                socket.emit('gpio', req);
+            }
 
-        function startStream() {
-            socket.emit('start-stream');
-            $('#start-stream').hide();
-        }
-    </script>
+            function startStream() {
+                socket.emit('start-stream');
+                $('#start-stream').hide();
+            }
+        </script>
 </body>
 
 </html>
