@@ -1,24 +1,3 @@
-import SoftPWM from 'raspi-soft-pwm';
-
-// Software state LED configuration
-const LED = {
-	red: new SoftPWM({
-		pin: 6,
-		range: 255,
-		frequency: 800
-	}),
-	green: new SoftPWM({
-		pin: 10,
-		range: 255,
-		frequency: 800
-	}),
-	blue: new SoftPWM({
-		pin: 11,
-		range: 255,
-		frequency: 800
-	})
-};
-
 function setLED(led, state) {
 	switch (state) {
 		case 'board-ready':
@@ -72,6 +51,5 @@ function setLED(led, state) {
 }
 
 export default {
-	LED,
 	setLED
 }

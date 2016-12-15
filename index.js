@@ -4,20 +4,14 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var path = require('path');
 
-var five = require('johnny-five');
-var raspi = require('./raspi');
-
+// import hardware interfaces
 var gpio = require('./gpio');
 var camera = require('./camera.js');
 
+// setup hardware api
 const LED = gpio.LED;
 const drivetrain = gpio.drivetrain;
-
-// Create board with gpio
-const board = new five.Board({
-  io: new raspi()
-});
-
+const board = gpio.pi.board;
 var sockets = {};
 
 app.use('/', express.static(path.join(__dirname, 'stream')));
