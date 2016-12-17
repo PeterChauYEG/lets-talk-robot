@@ -74,8 +74,8 @@ board.on('ready', function() {
   console.log('board ready');
 
   // initialize motors
-  gpio.setdrivetrain(drivetrain, 1, 1);
-  gpio.setdrivetrain(drivetrain, 0, 0);
+  gpio.setDrivetrain(drivetrain, 1, 1);
+  gpio.setDrivetrain(drivetrain, 0, 0);
 
   // Set Software state LED to "board-ready"
   gpio.setLED(LED, 'board-ready');
@@ -141,28 +141,28 @@ board.on('ready', function() {
           io.emit('log message', req);
 
           // motors forward
-          gpio.setdrivetrain(drivetrain, 1, 1);
+          gpio.setDrivetrain(drivetrain, 1, 1);
           break;
         case 'rotate right':
           console.log('message: ' + req);
           io.emit('log message', req);
 
           // motors rotate right
-          gpio.setdrivetrain(drivetrain, 1, 0);
+          gpio.setDrivetrain(drivetrain, 1, 0);
           break;
         case 'reverse':
           console.log('message: ' + req);
           io.emit('log message', req);
 
           // motors reverse
-          gpio.setdrivetrain(drivetrain, 1, 1);
+          gpio.setDrivetrain(drivetrain, 1, 1);
           break;
         case 'rotate left':
           console.log('message: ' + req);
           io.emit('log message', req);
 
           // motors rotate left
-          gpio.setdrivetrain(drivetrain, 0, 1);
+          gpio.setDrivetrain(drivetrain, 0, 1);
           break;
         case 'stop':
         default:
@@ -170,7 +170,7 @@ board.on('ready', function() {
           io.emit('log message', req);
 
           // stop motors
-          gpio.setdrivetrain(drivetrain, 0, 0);
+          gpio.setDrivetrain(drivetrain, 0, 0);
       }
     });
   });
@@ -182,7 +182,7 @@ board.on('ready', function() {
 
       // Turn off motors
       console.log('shutting down board...');
-      gpio.setdrivetrain(drivetrain, 0, 0);
+      gpio.setDrivetrain(drivetrain, 0, 0);
 
       // Set Software state LED to "board-off"
       console.log('talk to you later bae <3');
