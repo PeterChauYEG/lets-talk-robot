@@ -11,18 +11,7 @@ import {
 }
 from './LED';
 
-import {
-	board,
-	drivetrain,
-	LED,
-}
-
-from './pi';
-
 const gpio = {
-	board,
-	drivetrain,
-	LED,
 	setDrivetrain,
 	setLED,
 }

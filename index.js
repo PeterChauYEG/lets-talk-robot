@@ -4,15 +4,21 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var path = require('path');
 
+import five from 'johnny-five';
+import raspi from 'raspi-io';
+const SoftPWM = require('raspi-soft-pwm').SoftPWM;
+
 // import hardware interfaces
 var gpio = require('./gpio');
 var camera = require('./camera.js');
 
 // setup hardware api
-const LED = gpio.LED;
-const drivetrain = gpio.drivetrain;
-const board = gpio.pi.board;
 var sockets = {};
+
+// Create board with gpio
+const board = new five.Board({
+  io: new raspi()
+});
 
 app.use('/', express.static(path.join(__dirname, 'stream')));
 
@@ -61,108 +67,130 @@ io.on('connection', function(socket) {
   socket.on('log message', function(msg) {
     console.log('message: ' + msg);
     io.emit('log message', msg);
-  })
+  });
 
   // drive gpio
   socket.on('gpio', function(req) {
 
-    if (req == 'initialize') {
-      // Initialize board
-      board.on('ready', function() {
-        io.emit('log message', 'board ready');
+    // Initialize board
+    board.on('ready', function() {
 
-        // initialize motors
-        gpio.setdrivetrain(drivetrain, 1, 1);
-        gpio.setdrivetrain(drivetrain, 0, 0);
+      // POLOLU DRV8833 Dual H-bridge Configuration
+      const drivetrain = {
+      	ain: new five.Motor({ // right motor
+      		pins: {
+      			pwm: 24, // white wire // AIN2
+      			dir: 2 // red wire // AIN1
+      		},
+      		invertPWM: true
+      	}),
+      	bin: new five.Motor({ // left moter
+      		pins: {
+      			pwm: 26, // brown wire // BIN2
+      			dir: 7 // black wire // BIN1
+      		},
+      		invertPWM: true
+      	})
+      };
 
-        // Set Software state LED to "board-ready"
-        gpio.setLED(LED, 'board-ready');
+      // Software state LED configuration
+      const LED = {
+      	red: new SoftPWM({
+      		pin: 6,
+      		range: 255,
+      		frequency: 800
+      	}),
+      	green: new SoftPWM({
+      		pin: 10,
+      		range: 255,
+      		frequency: 800
+      	}),
+      	blue: new SoftPWM({
+      		pin: 11,
+      		range: 255,
+      		frequency: 800
+      	})
+      };
 
-        // Set Software state LED to "error connecting-to-server"
-        gpio.setLED(LED, 'error-connecting-to-server');
+      io.emit('log message', 'board ready');
 
-        // Set Software state LED to "connected-to-server"
-        gpio.setLED(LED, 'connected-to-server');
+      // initialize motors
+      gpio.setdrivetrain(drivetrain, 1, 1);
+      gpio.setdrivetrain(drivetrain, 0, 0);
 
-        // gpiO.setdrivetrain(drivetrain, AIN, BIN);
-        gpio.setLED(LED, 'board-response');
+      // Set Software state LED to "board-ready"
+      gpio.setLED(LED, 'board-ready');
 
-        gpio.setLED(LED, 'reconnected-to-server');
-        gpio.setLED(LED, 'server-pipe');
+      // Set Software state LED to "error connecting-to-server"
+      gpio.setLED(LED, 'error-connecting-to-server');
 
-        // handle gpio
-        socket.on('gpio', function(req) {
-          switch (req) {
-            case 'forward':
-              console.log('message: ' + req);
-              io.emit('log message', req);
+      // Set Software state LED to "connected-to-server"
+      gpio.setLED(LED, 'connected-to-server');
 
-              // motors forward
-              gpio.setdrivetrain(drivetrain, 1, 1);
-              break
-            case 'rotate right':
-              console.log('message: ' + req);
-              io.emit('log message', req);
+      // gpiO.setdrivetrain(drivetrain, AIN, BIN);
+      gpio.setLED(LED, 'board-response');
 
-              // motors rotate right
-              gpio.setdrivetrain(drivetrain, 1, 0);
-              break
-            case 'reverse':
-              console.log('message: ' + req);
-              io.emit('log message', req);
+      gpio.setLED(LED, 'reconnected-to-server');
+      gpio.setLED(LED, 'server-pipe');
 
-              // motors reverse
-              gpio.setdrivetrain(drivetrain, 1, 1);
-              break
-            case 'rotate left':
-              console.log('message: ' + req);
-              io.emit('log message', req);
+      // handle gpio
+      socket.on('gpio', function(req) {
+        switch (req) {
+          case 'forward':
+            console.log('message: ' + req);
+            io.emit('log message', req);
 
-              // motors rotate left
-              gpio.setdrivetrain(drivetrain, 0, 1);
-              break
-            case 'stop':
-            default:
-              console.log('message: ' + req);
-              io.emit('log message', req);
+            // motors forward
+            gpio.setdrivetrain(drivetrain, 1, 1);
+            break;
+          case 'rotate right':
+            console.log('message: ' + req);
+            io.emit('log message', req);
 
-              // stop motors
-              gpio.setdrivetrain(drivetrain, 0, 0);
-          }
-        })
+            // motors rotate right
+            gpio.setdrivetrain(drivetrain, 1, 0);
+            break;
+          case 'reverse':
+            console.log('message: ' + req);
+            io.emit('log message', req);
 
-        // Handle board shutdown
-        board.on('warn', function(event) {
-          console.log(event.message + '...');
-          if (event.message === 'Closing.') {
+            // motors reverse
+            gpio.setdrivetrain(drivetrain, 1, 1);
+            break;
+          case 'rotate left':
+            console.log('message: ' + req);
+            io.emit('log message', req);
 
-            // Turn off motors
-            console.log('shutting down board...');
+            // motors rotate left
+            gpio.setdrivetrain(drivetrain, 0, 1);
+            break;
+          case 'stop':
+          default:
+            console.log('message: ' + req);
+            io.emit('log message', req);
+
+            // stop motors
             gpio.setdrivetrain(drivetrain, 0, 0);
-
-            // Set Software state LED to "board-off"
-            console.log('talk to you later bae <3');
-            gpio.setLED(LED, 'board-off');
-          }
-        });
+        }
       });
-    }
 
-    if (req == 'shutdown') {
-      // if no more sockets, kill the stream
-      if (Object.keys(sockets).length == 0) {
+      // Handle board shutdown
+      board.on('warn', function(event) {
+        console.log(event.message + '...');
+        if (event.message === 'Closing.') {
 
-        // Turn off motors
-        console.log('shutting down board...');
-        gpio.setdrivetrain(drivetrain, 0, 0);
+          // Turn off motors
+          console.log('shutting down board...');
+          gpio.setdrivetrain(drivetrain, 0, 0);
 
-        // Set Software state LED to "board-off"
-        console.log('talk to you later bae <3');
-        gpio.setLED(LED, 'board-off');
-      }
-    }
-  })
-})
+          // Set Software state LED to "board-off"
+          console.log('talk to you later bae <3');
+          gpio.setLED(LED, 'board-off');
+        }
+      });
+    });
+  });
+});
 
 http.listen(8080, function() {
   console.log('listening on *:8080');
