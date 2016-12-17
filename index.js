@@ -15,6 +15,9 @@ var camera = require('./camera.js');
 // setup hardware api
 var sockets = {};
 
+// config event emitters
+process.setMaxListeners(11);
+
 // Create board with gpio
 const board = new five.Board({
   io: new raspi()
