@@ -6,7 +6,23 @@ export function setDrivetrain(drivetrain, AIN, BIN) {
 		return;
 	}
 
+	// determine direction of motor
+	const gears = {
+		right: AIN >= 0 ? true : false,
+		left: BIN >= 0 ? true : false,
+	};
+
 	// set motors
-	AIN ? drivetrain.ain.forward(AIN) : drivetrain.ain.reverse(AIN);
-	BIN ? drivetrain.ain.forward(BIN) : drivetrain.ain.reverse(BIN);
+	if (AIN == null) {
+		gears.left ? drivetrain.bin.forward(BIN) : drivetrain.bin.reverse(-BIN);
+
+	}
+	else if (BIN == null) {
+		gears.right ? drivetrain.ain.forward(AIN) : drivetrain.ain.reverse(-AIN);
+	}
+	else {
+		gears.right ? drivetrain.ain.forward(AIN) : drivetrain.ain.reverse(-AIN);
+		gears.left ? drivetrain.bin.forward(BIN) : drivetrain.bin.reverse(-BIN);
+	}
+	return;
 }
