@@ -30,109 +30,108 @@ app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-// client connection
-io.on('connection', function(socket) {
-  sockets[socket.id] = socket;
-  console.log("Total clients connected : " + Object.keys(sockets).length);
+// Initialize board
+board.on('ready', function() {
 
-  io.emit('log message', 'a user has connected');
-  console.log('a user connected');
+  // POLOLU DRV8833 Dual H-bridge Configuration
+  const drivetrain = {
+  	ain: new five.Motor({ // right motor
+  		pins: {
+  			pwm: 24, // white wire // AIN2
+  			dir: 2 // red wire // AIN1
+  		},
+  		invertPWM: true
+  	}),
+  	bin: new five.Motor({ // left moter
+  		pins: {
+  			pwm: 26, // brown wire // BIN2
+  			dir: 7 // black wire // BIN1
+  		},
+  		invertPWM: true
+  	})
+  };
 
-  // client disconnection
-  socket.on('disconnect', function() {
-    delete sockets[socket.id];
+  // Software state LED configuration
+  const LED = {
+  	red: new SoftPWM({
+  		pin: 6,
+  		range: 255,
+  		frequency: 800
+  	}),
+  	green: new SoftPWM({
+  		pin: 10,
+  		range: 255,
+  		frequency: 800
+  	}),
+  	blue: new SoftPWM({
+  		pin: 11,
+  		range: 255,
+  		frequency: 800
+  	})
+  };
 
-    // if no more sockets, kill the stream
-    if (Object.keys(sockets).length == 0) {
-      app.set('watchingFile', false);
-      stopStreaming;
-    }
+  io.emit('log message', 'board ready');
+  console.log('board ready');
 
-    io.emit('log message', 'a user has disconnected');
-    console.log('user disconnected');
-  });
+  // initialize motors
+  gpio.setdrivetrain(drivetrain, 1, 1);
+  gpio.setdrivetrain(drivetrain, 0, 0);
 
-  // to start a stream
-  socket.on('start-stream', function() {
-    io.emit('log message', 'starting video stream');
+  // Set Software state LED to "board-ready"
+  gpio.setLED(LED, 'board-ready');
 
-    if (app.get('watchingFile')) {
-      io.sockets.emit('liveStream', 'image_stream.jpg?=' + (Math.random() * 100000));
-    }
-    else {
-      startStreaming(io);
-      app.set('watchingFile', true);
-    }
+  // Set Software state LED to "error connecting-to-server"
+  gpio.setLED(LED, 'error-connecting-to-server');
 
-  });
+  // Set Software state LED to "connected-to-server"
+  gpio.setLED(LED, 'connected-to-server');
 
-  // log message to client
-  socket.on('log message', function(msg) {
-    console.log('message: ' + msg);
-    io.emit('log message', msg);
-  });
+  // gpiO.setdrivetrain(drivetrain, AIN, BIN);
+  gpio.setLED(LED, 'board-response');
 
-  // Initialize board
-  board.on('ready', function() {
+  gpio.setLED(LED, 'reconnected-to-server');
+  gpio.setLED(LED, 'server-pipe');
 
-    // POLOLU DRV8833 Dual H-bridge Configuration
-    const drivetrain = {
-    	ain: new five.Motor({ // right motor
-    		pins: {
-    			pwm: 24, // white wire // AIN2
-    			dir: 2 // red wire // AIN1
-    		},
-    		invertPWM: true
-    	}),
-    	bin: new five.Motor({ // left moter
-    		pins: {
-    			pwm: 26, // brown wire // BIN2
-    			dir: 7 // black wire // BIN1
-    		},
-    		invertPWM: true
-    	})
-    };
+  // client connection
+  io.on('connection', function(socket) {
+    sockets[socket.id] = socket;
+    console.log("Total clients connected : " + Object.keys(sockets).length);
 
-    // Software state LED configuration
-    const LED = {
-    	red: new SoftPWM({
-    		pin: 6,
-    		range: 255,
-    		frequency: 800
-    	}),
-    	green: new SoftPWM({
-    		pin: 10,
-    		range: 255,
-    		frequency: 800
-    	}),
-    	blue: new SoftPWM({
-    		pin: 11,
-    		range: 255,
-    		frequency: 800
-    	})
-    };
+    io.emit('log message', 'a user has connected');
+    console.log('a user connected');
 
-    io.emit('log message', 'board ready');
-    console.log('board ready');
+    // client disconnection
+    socket.on('disconnect', function() {
+      delete sockets[socket.id];
 
-    // initialize motors
-    gpio.setdrivetrain(drivetrain, 1, 1);
-    gpio.setdrivetrain(drivetrain, 0, 0);
+      // if no more sockets, kill the stream
+      if (Object.keys(sockets).length == 0) {
+        app.set('watchingFile', false);
+        stopStreaming;
+      }
 
-    // Set Software state LED to "board-ready"
-    gpio.setLED(LED, 'board-ready');
+      io.emit('log message', 'a user has disconnected');
+      console.log('user disconnected');
+    });
 
-    // Set Software state LED to "error connecting-to-server"
-    gpio.setLED(LED, 'error-connecting-to-server');
+    // to start a stream
+    socket.on('start-stream', function() {
+      io.emit('log message', 'starting video stream');
 
-    // Set Software state LED to "connected-to-server"
-    gpio.setLED(LED, 'connected-to-server');
+      if (app.get('watchingFile')) {
+        io.sockets.emit('liveStream', 'image_stream.jpg?=' + (Math.random() * 100000));
+      }
+      else {
+        startStreaming(io);
+        app.set('watchingFile', true);
+      }
+    });
 
-    // gpiO.setdrivetrain(drivetrain, AIN, BIN);
-    gpio.setLED(LED, 'board-response');
-
-    gpio.setLED(LED, 'reconnected-to-server');
-    gpio.setLED(LED, 'server-pipe');
+    // log message to client
+    socket.on('log message', function(msg) {
+      console.log('message: ' + msg);
+      io.emit('log message', msg);
+    });
 
     // handle gpio
     socket.on('gpio', function(req) {
@@ -174,21 +173,21 @@ io.on('connection', function(socket) {
           gpio.setdrivetrain(drivetrain, 0, 0);
       }
     });
+  });
 
-    // Handle board shutdown
-    board.on('warn', function(event) {
-      console.log(event.message + '...');
-      if (event.message === 'Closing.') {
+  // Handle board shutdown
+  board.on('warn', function(event) {
+    console.log(event.message + '...');
+    if (event.message === 'Closing.') {
 
-        // Turn off motors
-        console.log('shutting down board...');
-        gpio.setdrivetrain(drivetrain, 0, 0);
+      // Turn off motors
+      console.log('shutting down board...');
+      gpio.setdrivetrain(drivetrain, 0, 0);
 
-        // Set Software state LED to "board-off"
-        console.log('talk to you later bae <3');
-        gpio.setLED(LED, 'board-off');
-      }
-    });
+      // Set Software state LED to "board-off"
+      console.log('talk to you later bae <3');
+      gpio.setLED(LED, 'board-off');
+    }
   });
 });
 
