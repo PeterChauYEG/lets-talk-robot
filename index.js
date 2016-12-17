@@ -45,7 +45,7 @@ io.on('connection', function(socket) {
     // if no more sockets, kill the stream
     if (Object.keys(sockets).length == 0) {
       app.set('watchingFile', false);
-      stopStreaming();
+      stopStreaming;
     }
 
     io.emit('log message', 'a user has disconnected');
