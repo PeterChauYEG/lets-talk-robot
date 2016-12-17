@@ -9,7 +9,8 @@ import raspi from 'raspi-io';
 const SoftPWM = require('raspi-soft-pwm').SoftPWM;
 
 // import hardware interfaces
-import { setDrivetrain, setLED } from './gpio';
+import { setDrivetrain } from './drv8833';
+import { setLED } from './LED';
 import { startStreaming, stopStreaming } from './camera.js';
 
 // setup hardware api
