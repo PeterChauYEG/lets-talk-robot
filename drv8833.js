@@ -1,20 +1,30 @@
 export function setDrivetrain(drivetrain, AIN, BIN) {
 	// speed range is 0 - 255
+
+	// stop
 	if (AIN == 0 && BIN == 0) {
 		drivetrain.ain.stop();
 		drivetrain.bin.stop();
 		return;
 	}
 
-	// determine direction of motor
-	const gears = {
-		right: AIN == 1 ? true : false,
-		left: BIN == 1 ? true : false,
-	};
+	if (AIN == 1 && BIN == 1) {
+		drivetrain.ain.forward(255);
+		drivetrain.bin.forward(255);
+		return;
+	}
 
-	// set motors
-	gears.right ? drivetrain.ain.forward(AIN) : drivetrain.ain.reverse(-AIN);
-	gears.left ? drivetrain.bin.forward(BIN) : drivetrain.bin.reverse(-BIN);
+	if (AIN == 1 && BIN == 0) {
+		drivetrain.ain.forward(255);
+		drivetrain.bin.reverse(255);
+		return;
+	}
+
+	if (AIN == 0 && BIN == 1) {
+		drivetrain.ain.reverse(255);
+		drivetrain.bin.forward(255);
+		return;
+	}
 
 	return;
 }

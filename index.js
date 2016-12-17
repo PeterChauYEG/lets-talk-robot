@@ -138,11 +138,11 @@ board.on('ready', function() {
     socket.on('gpio', function(req) {
       switch (req) {
         case 'forward':
-          console.log('message: ' + req);
-          io.emit('log message', req);
-
           // motors forward
           setDrivetrain(drivetrain, 1, 1);
+
+          console.log('message: ' + req);
+          io.emit('log message', req);
           break;
         case 'rotate right':
           console.log('message: ' + req);
