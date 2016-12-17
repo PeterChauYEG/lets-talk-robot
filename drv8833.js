@@ -8,21 +8,13 @@ export function setDrivetrain(drivetrain, AIN, BIN) {
 
 	// determine direction of motor
 	const gears = {
-		right: AIN >= 0 ? true : false,
-		left: BIN >= 0 ? true : false,
+		right: AIN == 1 ? true : false,
+		left: BIN == 1 ? true : false,
 	};
 
 	// set motors
-	if (AIN == null) {
-		gears.left ? drivetrain.bin.forward(BIN) : drivetrain.bin.reverse(-BIN);
+	gears.right ? drivetrain.ain.forward(AIN) : drivetrain.ain.reverse(-AIN);
+	gears.left ? drivetrain.bin.forward(BIN) : drivetrain.bin.reverse(-BIN);
 
-	}
-	else if (BIN == null) {
-		gears.right ? drivetrain.ain.forward(AIN) : drivetrain.ain.reverse(-AIN);
-	}
-	else {
-		gears.right ? drivetrain.ain.forward(AIN) : drivetrain.ain.reverse(-AIN);
-		gears.left ? drivetrain.bin.forward(BIN) : drivetrain.bin.reverse(-BIN);
-	}
 	return;
 }
