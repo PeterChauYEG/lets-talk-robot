@@ -137,41 +137,31 @@ board.on('ready', function() {
     // handle gpio
     socket.on('gpio', function(req) {
       switch (req) {
+
         case 'forward':
-          // motors forward
           setDrivetrain(drivetrain, 1, 1);
-
           console.log('message: ' + req);
-          io.emit('log message', req);
           break;
+
         case 'rotate right':
-          console.log('message: ' + req);
-          io.emit('log message', req);
-
-          // motors rotate right
           setDrivetrain(drivetrain, -1, 1);
+          console.log('message: ' + req);
           break;
+
         case 'backwards':
-          console.log('message: ' + req);
-          io.emit('log message', req);
-
-          // motors reverse
           setDrivetrain(drivetrain, -1, -1);
-          break;
-        case 'rotate left':
           console.log('message: ' + req);
-          io.emit('log message', req);
-
-          // motors rotate left
-          setDrivetrain(drivetrain, 1, -1);
           break;
+
+        case 'rotate left':
+          setDrivetrain(drivetrain, 1, -1);
+          console.log('message: ' + req);
+          break;
+
         case 'stop':
         default:
-          console.log('message: ' + req);
-          io.emit('log message', req);
-
-          // stop motors
           setDrivetrain(drivetrain, 0, 0);
+          console.log('message: ' + req);
       }
     });
   });
