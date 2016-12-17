@@ -180,6 +180,7 @@
             });
 
             function gpio(req) {
+                console.log(`gpio ${req}`)
                 socket.emit('gpio', req);
             }
 
