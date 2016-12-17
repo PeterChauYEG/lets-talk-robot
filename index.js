@@ -9,7 +9,7 @@ import raspi from 'raspi-io';
 const SoftPWM = require('raspi-soft-pwm').SoftPWM;
 
 // import hardware interfaces
-var gpio = require('./gpio');
+import { setDrivetrain, setLED } from './gpio';
 import { startStreaming, stopStreaming } from './camera.js';
 
 // setup hardware api
@@ -74,23 +74,23 @@ board.on('ready', function() {
   console.log('board ready');
 
   // initialize motors
-  gpio.setDrivetrain(drivetrain, 1, 1);
-  gpio.setDrivetrain(drivetrain, 0, 0);
+  setDrivetrain(drivetrain, 1, 1);
+  setDrivetrain(drivetrain, 0, 0);
 
   // Set Software state LED to "board-ready"
-  gpio.setLED(LED, 'board-ready');
+  setLED(LED, 'board-ready');
 
   // Set Software state LED to "error connecting-to-server"
-  gpio.setLED(LED, 'error-connecting-to-server');
+  setLED(LED, 'error-connecting-to-server');
 
   // Set Software state LED to "connected-to-server"
-  gpio.setLED(LED, 'connected-to-server');
+  setLED(LED, 'connected-to-server');
 
-  // gpiO.setdrivetrain(drivetrain, AIN, BIN);
-  gpio.setLED(LED, 'board-response');
+  // setdrivetrain(drivetrain, AIN, BIN);
+  setLED(LED, 'board-response');
 
-  gpio.setLED(LED, 'reconnected-to-server');
-  gpio.setLED(LED, 'server-pipe');
+  setLED(LED, 'reconnected-to-server');
+  setLED(LED, 'server-pipe');
 
   // client connection
   io.on('connection', function(socket) {
@@ -141,28 +141,28 @@ board.on('ready', function() {
           io.emit('log message', req);
 
           // motors forward
-          gpio.setDrivetrain(drivetrain, 1, 1);
+          setDrivetrain(drivetrain, 1, 1);
           break;
         case 'rotate right':
           console.log('message: ' + req);
           io.emit('log message', req);
 
           // motors rotate right
-          gpio.setDrivetrain(drivetrain, 1, 0);
+          setDrivetrain(drivetrain, 1, 0);
           break;
         case 'reverse':
           console.log('message: ' + req);
           io.emit('log message', req);
 
           // motors reverse
-          gpio.setDrivetrain(drivetrain, 1, 1);
+          setDrivetrain(drivetrain, 1, 1);
           break;
         case 'rotate left':
           console.log('message: ' + req);
           io.emit('log message', req);
 
           // motors rotate left
-          gpio.setDrivetrain(drivetrain, 0, 1);
+          setDrivetrain(drivetrain, 0, 1);
           break;
         case 'stop':
         default:
@@ -170,7 +170,7 @@ board.on('ready', function() {
           io.emit('log message', req);
 
           // stop motors
-          gpio.setDrivetrain(drivetrain, 0, 0);
+          setDrivetrain(drivetrain, 0, 0);
       }
     });
   });
@@ -182,11 +182,11 @@ board.on('ready', function() {
 
       // Turn off motors
       console.log('shutting down board...');
-      gpio.setDrivetrain(drivetrain, 0, 0);
+      setDrivetrain(drivetrain, 0, 0);
 
       // Set Software state LED to "board-off"
       console.log('talk to you later bae <3');
-      gpio.setLED(LED, 'board-off');
+      setLED(LED, 'board-off');
     }
   });
 });
