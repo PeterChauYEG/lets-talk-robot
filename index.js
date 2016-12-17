@@ -149,7 +149,7 @@ board.on('ready', function() {
           io.emit('log message', req);
 
           // motors rotate right
-          setDrivetrain(drivetrain, 1, -1);
+          setDrivetrain(drivetrain, -1, 1);
           break;
         case 'backwards':
           console.log('message: ' + req);
@@ -163,7 +163,7 @@ board.on('ready', function() {
           io.emit('log message', req);
 
           // motors rotate left
-          setDrivetrain(drivetrain, -1, 1);
+          setDrivetrain(drivetrain, 1, -1);
           break;
         case 'stop':
         default:

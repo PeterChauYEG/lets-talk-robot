@@ -32,5 +32,4 @@ export function setDrivetrain(drivetrain, AIN, BIN) {
 		return;
 	}
 
-	return;
 }
