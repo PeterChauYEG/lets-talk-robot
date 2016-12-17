@@ -1,4 +1,4 @@
-function setLED(led, state) {
+export function setLED(led, state) {
 	switch (state) {
 		case 'board-ready':
 			// color yellow
@@ -48,8 +48,4 @@ function setLED(led, state) {
 			led.green.write(0);
 			led.blue.write(0);
 	}
-}
-
-export default {
-	setLED
 }

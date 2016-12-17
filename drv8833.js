@@ -1,4 +1,4 @@
-function setDrivetrain(drivetrain, AIN, BIN) {
+export function setDrivetrain(drivetrain, AIN, BIN) {
 	// speed range is 0 - 255
 	if (AIN == 0 && BIN == 0) {
 		drivetrain.ain.stop();
@@ -25,8 +25,4 @@ function setDrivetrain(drivetrain, AIN, BIN) {
 		gears.left ? drivetrain.bin.forward(BIN) : drivetrain.bin.reverse(-BIN);
 	}
 	return;
-}
-
-export default {
-	setDrivetrain
 }
