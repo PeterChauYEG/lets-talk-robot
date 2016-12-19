@@ -1,8 +1,7 @@
-var fs = require('fs');
-var spawn = require('child_process').spawn;
+import fs from 'fs';
+import { spawn } from 'child_process';
 
-var proc;
-
+let proc;
 
 export function stopStreaming() {
   if (proc) {
@@ -12,7 +11,9 @@ export function stopStreaming() {
 }
 
 export function startStreaming(io) {
-  var args = ["-w", "640", "-h", "480", "-o", "./stream/image_stream.jpg", "-t", "999999999", "-tl", "100"];
+  const args = ["-w", "640", "-h", "480", "-o", "./stream/image_stream.jpg", "-t", "999999999", "-tl", "100"];
+
+  // spawn live-stream process
   proc = spawn('raspistill', args);
 
   console.log('Watching for changes...');
