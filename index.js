@@ -29,6 +29,9 @@ const board = new five.Board({
 // serve stream
 app.use('/', express.static(path.join(__dirname, 'stream')));
 
+// server client
+app.use('/', express.static(path.join(__dirname, '/client')));
+
 // serve client
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/client/index.html');
