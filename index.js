@@ -33,7 +33,7 @@ app.use('/', express.static(path.join(__dirname, 'stream')));
 
 // serve client
 app.get('/', function(req, res) {
-  res.sendFile(__dirname + '/client/index.html');
+  res.sendFile(path.join(__dirname + '/client/index.html'));
 });
 
 // Initialize board
