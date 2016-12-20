@@ -28,47 +28,6 @@ const board = new five.Board({
   io: new raspi()
 });
 
-// POLOLU DRV8833 Dual H-bridge Configuration
-const drivetrain = {
-
-  // right motor
-	ain: new five.Motor({
-		pins: {
-			pwm: 24, // white wire // AIN2
-			dir: 2 // red wire // AIN1
-		},
-		invertPWM: true
-	}),
-
-	// left motor
-	bin: new five.Motor({
-		pins: {
-			pwm: 26, // brown wire // BIN2
-			dir: 7 // black wire // BIN1
-		},
-		invertPWM: true
-	})
-};
-
-// Software state LED configuration
-const LED = {
-	red: new SoftPWM({
-		pin: 6,
-		range: 255,
-		frequency: 800
-	}),
-	green: new SoftPWM({
-		pin: 10,
-		range: 255,
-		frequency: 800
-	}),
-	blue: new SoftPWM({
-		pin: 11,
-		range: 255,
-		frequency: 800
-	})
-};
-
 // serve stream
 app.use('/', express.static(path.join(__dirname, 'stream')));
 
@@ -79,6 +38,47 @@ app.get('/', function(req, res) {
 
 // Initialize board
 board.on('ready', function() {
+
+  // POLOLU DRV8833 Dual H-bridge Configuration
+  const drivetrain = {
+
+    // right motor
+  	ain: new five.Motor({
+  		pins: {
+  			pwm: 24, // white wire // AIN2
+  			dir: 2 // red wire // AIN1
+  		},
+  		invertPWM: true
+  	}),
+
+  	// left motor
+  	bin: new five.Motor({
+  		pins: {
+  			pwm: 26, // brown wire // BIN2
+  			dir: 7 // black wire // BIN1
+  		},
+  		invertPWM: true
+  	})
+  };
+
+  // Software state LED configuration
+  const LED = {
+  	red: new SoftPWM({
+  		pin: 6,
+  		range: 255,
+  		frequency: 800
+  	}),
+  	green: new SoftPWM({
+  		pin: 10,
+  		range: 255,
+  		frequency: 800
+  	}),
+  	blue: new SoftPWM({
+  		pin: 11,
+  		range: 255,
+  		frequency: 800
+  	})
+  };
 
   // initialize motors
   setDrivetrain(drivetrain, 1, 1);
