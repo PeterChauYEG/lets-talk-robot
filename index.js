@@ -9,13 +9,11 @@ import { setLED } from './drivers/LED';
 import { startStreaming, stopStreaming } from './drivers/camera.js';
 
 // import api deps
-import express from 'express';
-import { Server } from 'http';
-import path from 'path';
-
-var http = Server(app);
-var io = require('socket.io')(http);
+var express = require('express');
 var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+var path = require('path');
 
 // setup hardware api
 var sockets = {};
