@@ -165,8 +165,7 @@ board.on('ready', function() {
 
       // if no more sockets, kill the stream
       if (Object.keys(sockets).length == 0) {
-        app.set('watchingFile', false);
-        stopStreaming;
+        stopStreaming();
       }
 
       io.emit('log message', 'a user has disconnected');
@@ -197,14 +196,21 @@ http.listen(8080, function() {
 
 function stopStreaming() {
   if (proc) {
+
+    // kill live stream process
     proc.kill();
+
+    // set api state
+    app.set('watchingFile', false);
+
+    // unwatch image_stream
     fs.unwatchFile('./stream/image_stream.jpg');
   }
 }
 
 function startStreaming(io) {
   if (app.get('watchingFile')) {
-    io.sockets.emit('liveStream', 'image_stream.jpg?_t=' + (Math.random() * 100000));
+    io.sockets.emit('liveStream', './stream/image_stream.jpg?_t=' + (Math.random() * 100000));
     return;
   }
 
@@ -215,9 +221,10 @@ function startStreaming(io) {
 
   console.log('Watching for changes...');
 
-  // set api state ?
+  // set api state
   app.set('watchingFile', true);
 
+  // watch image_stream
   fs.watchFile('./stream/image_stream.jpg', function(current, previous) {
     io.sockets.emit('liveStream', './stream/image_stream.jpg?_t=' + (Math.random() * 100000));
   });
