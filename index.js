@@ -122,7 +122,7 @@ board.on('ready', function() {
       setLED(LED, 'streaming');
 
       if (app.get('watchingFile')) {
-        io.sockets.emit('liveStream', 'image_stream.jpg?=' + (Math.random() * 100000));
+        io.sockets.emit('liveStream', './stream/image_stream.jpg?=' + (Math.random() * 100000));
       }
       else {
         startStreaming(io);
