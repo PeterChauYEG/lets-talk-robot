@@ -15,7 +15,7 @@ socket.on('log message', function(msg) {
 });
 
 // start the stream
-socket.on('start-stream', function(url) {
+socket.on('liveStream', function(url) {
   $('#stream').attr('src', url);
   $('#start-stream').hide();
   return;

@@ -110,10 +110,9 @@ board.on('ready', function() {
 
     // to start a stream
     socket.on('start-stream', function() {
+      startStreaming(io);
       io.emit('log message', 'starting video stream');
       setLED(LED, 'streaming');
-      startStreaming(io);
-
     });
 
     // log message to client
@@ -164,18 +163,7 @@ board.on('ready', function() {
       delete sockets[socket.id];
 
       // if no more sockets, kill the stream
-      if (Object.keys(sockets).length == 0) {
-        stopStreaming();
-
-        // set api state
-        app.set('watchingFile', false);
-
-        // unwatch image_stream
-        fs.unwatchFile('./stream/image_stream.jpg');
-
-        console.log('Stream killed');
-        io.emit('log message', 'Stream Killed');
-      }
+      stopStreaming(io);
 
       io.emit('log message', 'a user has disconnected');
       console.log('user disconnected');
@@ -203,16 +191,27 @@ http.listen(8080, function() {
   console.log('listening on *:8080');
 });
 
-function stopStreaming() {
+function stopStreaming(io) {
   // kill live stream process
-  if (proc) {
-    proc.kill();
+  if (Object.keys(sockets).length == 0) {
+    if (proc) {
+      proc.kill();
+    }
+
+    // set api state
+    app.set('watchingFile', false);
+
+    // unwatch image_stream
+    fs.unwatchFile('./stream/image_stream.jpg');
+
+    console.log('Stream killed');
+    io.emit('log message', 'Stream Killed');
   }
 }
 
 function startStreaming(io) {
   if (app.get('watchingFile')) {
-    io.sockets.emit('start-stream', './stream/image_stream.jpg?_t=' + (Math.random() * 100000));
+    io.sockets.emit('liveStream', './stream/image_stream.jpg?_t=' + (Math.random() * 100000));
     return;
   }
 
