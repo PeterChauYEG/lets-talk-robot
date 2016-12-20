@@ -29,7 +29,7 @@ const board = new five.Board({
 });
 
 // serve stream
-// app.use('/', express.static(path.join(__dirname, 'stream')));
+app.use('/', express.static(path.join(__dirname, 'stream')));
 
 // serve client
 app.get('/', function(req, res) {
