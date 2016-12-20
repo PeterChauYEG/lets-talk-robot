@@ -33,7 +33,7 @@ const board = new five.Board({
 
 // serve client
 app.get('/', function(req, res) {
-  res.sendFile(path.join(__dirname + '/client/index.html'));
+  res.sendFile(__dirname + '/index.html');
 });
 
 // Initialize board

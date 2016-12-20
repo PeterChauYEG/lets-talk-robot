@@ -3,18 +3,18 @@
 
 <head>
   <title>Socket.IO chat</title>
-  <link rel="stylesheet" href="css/index.css">
-  <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="client/css/index.css">
+  <link rel="stylesheet" href="client/css/font-awesome/css/font-awesome.min.css">
 </head>
 
 <body>
   <!--logo-->
   <img id="logo"
-    src="./robot.png">
+    src="client/robot.png">
 
   <!--feed-->
   <div id="feed">
-    <img src="./image_stream.jpg"
+    <img src="client/image_stream.jpg"
       id="stream">
   </div>
 
@@ -98,9 +98,9 @@
     </div>
 
     <!--load the socket.io-client-->
-    <script src="../node_modules/socket.io/socket.io.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script src="./index.js"></script>
+    <script src="client/index.js"></script>
 </body>
 
 </html>
