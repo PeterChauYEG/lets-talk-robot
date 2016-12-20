@@ -6,7 +6,10 @@ import { SoftPWM } from 'raspi-soft-pwm';
 // import hardware interfaces
 import { setDrivetrain } from './drivers/drv8833';
 import { setLED } from './drivers/LED';
-import { startStreaming, stopStreaming } from './drivers/camera.js';
+
+// import camera process interface
+import fs from 'fs';
+import { spawn } from 'child_process';
 
 // import api deps
 var express = require('express');
@@ -20,6 +23,9 @@ var sockets = {};
 
 // config event emitters
 process.setMaxListeners(11);
+
+// setup proc
+let proc;
 
 // Create board with gpio
 const board = new five.Board({
@@ -102,32 +108,12 @@ board.on('ready', function() {
     io.emit('log message', 'a user has connected');
     console.log('a user connected');
 
-    // client disconnection
-    socket.on('disconnect', function() {
-      delete sockets[socket.id];
-
-      // if no more sockets, kill the stream
-      if (Object.keys(sockets).length == 0) {
-        app.set('watchingFile', false);
-        stopStreaming;
-      }
-
-      io.emit('log message', 'a user has disconnected');
-      console.log('user disconnected');
-    });
-
     // to start a stream
     socket.on('start-stream', function() {
       io.emit('log message', 'starting video stream');
       setLED(LED, 'streaming');
+      startStreaming(io);
 
-      if (app.get('watchingFile')) {
-        io.sockets.emit('start-stream', '../stream/image_stream.jpg?=' + (Math.random() * 100000));
-      }
-      else {
-        startStreaming(io);
-        app.set('watchingFile', true);
-      }
     });
 
     // log message to client
@@ -172,6 +158,20 @@ board.on('ready', function() {
           console.log('message: ' + req);
       }
     });
+
+    // client disconnection
+    socket.on('disconnect', function() {
+      delete sockets[socket.id];
+
+      // if no more sockets, kill the stream
+      if (Object.keys(sockets).length == 0) {
+        app.set('watchingFile', false);
+        stopStreaming;
+      }
+
+      io.emit('log message', 'a user has disconnected');
+      console.log('user disconnected');
+    });
   });
 
   // Handle board shutdown
@@ -194,3 +194,31 @@ board.on('ready', function() {
 http.listen(8080, function() {
   console.log('listening on *:8080');
 });
+
+function stopStreaming() {
+  if (proc) {
+    proc.kill();
+    fs.unwatchFile('./stream/image_stream.jpg');
+  }
+}
+
+function startStreaming(io) {
+  if (app.get('watchingFile')) {
+    io.sockets.emit('liveStream', 'image_stream.jpg?_t=' + (Math.random() * 100000));
+    return;
+  }
+
+  const args = ["-w", "640", "-h", "480", "-o", "./stream/image_stream.jpg", "-t", "999999999", "-tl", "100"];
+
+  // spawn live-stream process
+  proc = spawn('raspistill', args);
+
+  console.log('Watching for changes...');
+
+  // set api state ?
+  app.set('watchingFile', true);
+
+  fs.watchFile('./stream/image_stream.jpg', function(current, previous) {
+    io.sockets.emit('liveStream', './stream/image_stream.jpg?_t=' + (Math.random() * 100000));
+  });
+}
