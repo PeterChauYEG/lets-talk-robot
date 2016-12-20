@@ -27,7 +27,7 @@ const board = new five.Board({
 });
 
 // serve stream
-app.use('/', express.static(path.join(__dirname, 'stream')));
+app.use('/', express.static(path.join(__dirname, '/stream')));
 
 // server client
 app.use('/', express.static(path.join(__dirname, '/client')));
@@ -122,7 +122,7 @@ board.on('ready', function() {
       setLED(LED, 'streaming');
 
       if (app.get('watchingFile')) {
-        io.sockets.emit('liveStream', './stream/image_stream.jpg?=' + (Math.random() * 100000));
+        io.sockets.emit('start-stream', './stream/image_stream.jpg?=' + (Math.random() * 100000));
       }
       else {
         startStreaming(io);
