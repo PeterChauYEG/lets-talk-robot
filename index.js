@@ -108,6 +108,17 @@ board.on('ready', function() {
     io.emit('log message', 'a user has connected');
     console.log('a user connected');
 
+    // client disconnection
+    socket.on('disconnect', function() {
+      delete sockets[socket.id];
+
+      // if no more sockets, kill the stream
+      stopStreaming(io);
+
+      io.emit('log message', 'a user has disconnected');
+      console.log('user disconnected');
+    });
+
     // to start a stream
     socket.on('start-stream', function() {
       startStreaming(io);
@@ -157,32 +168,6 @@ board.on('ready', function() {
           console.log('message: ' + req);
       }
     });
-
-    // client disconnection
-    socket.on('disconnect', function() {
-      delete sockets[socket.id];
-
-      // if no more sockets, kill the stream
-      stopStreaming(io);
-
-      io.emit('log message', 'a user has disconnected');
-      console.log('user disconnected');
-    });
-  });
-
-  // Handle board shutdown
-  board.on('warn', function(event) {
-    console.log(event.message + '...');
-    if (event.message === 'Closing.') {
-
-      // Turn off motors
-      console.log('shutting down board...');
-      setDrivetrain(drivetrain, 0, 0);
-
-      // Set Software state LED to "board-off"
-      console.log('talk to you later bae <3');
-      setLED(LED, 'board-off');
-    }
   });
 });
 
