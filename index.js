@@ -92,7 +92,7 @@ board.on('ready', function() {
   setDrivetrain(drivetrain, 0, 0);
 
   // Set Software state LED to "board-ready"
-  // setLED(LED, 'board-ready');
+  setLED(LED, 'board-ready');
   io.emit('log message', 'board ready');
   console.log('board ready');
 
@@ -139,32 +139,32 @@ board.on('ready', function() {
 
         case 'forward':
           setDrivetrain(drivetrain, 1, 1);
-          setLED(LED, 'server-pipe');
+          // setLED(LED, 'server-pipe');
           console.log('message: ' + req);
           break;
 
         case 'rotate right':
           setDrivetrain(drivetrain, -1, 1);
-          setLED(LED, 'server-pipe');
+          // setLED(LED, 'server-pipe');
           console.log('message: ' + req);
           break;
 
         case 'backwards':
           setDrivetrain(drivetrain, -1, -1);
-          setLED(LED, 'server-pipe');
+          // setLED(LED, 'server-pipe');
           console.log('message: ' + req);
           break;
 
         case 'rotate left':
           setDrivetrain(drivetrain, 1, -1);
-          setLED(LED, 'server-pipe');
+          // setLED(LED, 'server-pipe');
           console.log('message: ' + req);
           break;
 
         case 'stop':
         default:
           setDrivetrain(drivetrain, 0, 0);
-          setLED(LED, 'server-pipe');
+          // setLED(LED, 'server-pipe');
           console.log('message: ' + req);
       }
     });
