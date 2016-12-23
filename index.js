@@ -104,7 +104,7 @@ board.on('ready', function() {
     console.log("Total clients connected : " + Object.keys(sockets).length);
 
     // Set Software state LED to "connected-to-server"
-    // setLED(LED, 'connected-to-server');
+    setLED(LED, 'connected-to-server');
     io.emit('log message', 'a user has connected');
     console.log('a user connected');
 
@@ -123,13 +123,13 @@ board.on('ready', function() {
     socket.on('start-stream', function() {
       startStreaming(io);
       io.emit('log message', 'starting video stream');
-      // setLED(LED, 'streaming');
+      setLED(LED, 'streaming');
     });
 
     // log message to client
     socket.on('log message', function(msg) {
       io.emit('log message', msg);
-      // setLED(LED, 'server-pipe');
+      setLED(LED, 'server-pipe');
       console.log('message: ' + msg);
     });
 
@@ -139,32 +139,32 @@ board.on('ready', function() {
 
         case 'forward':
           setDrivetrain(drivetrain, 1, 1);
-          // setLED(LED, 'server-pipe');
+          setLED(LED, 'server-pipe');
           console.log('message: ' + req);
           break;
 
         case 'rotate right':
           setDrivetrain(drivetrain, -1, 1);
-          // setLED(LED, 'server-pipe');
+          setLED(LED, 'server-pipe');
           console.log('message: ' + req);
           break;
 
         case 'backwards':
           setDrivetrain(drivetrain, -1, -1);
-          // setLED(LED, 'server-pipe');
+          setLED(LED, 'server-pipe');
           console.log('message: ' + req);
           break;
 
         case 'rotate left':
           setDrivetrain(drivetrain, 1, -1);
-          // setLED(LED, 'server-pipe');
+          setLED(LED, 'server-pipe');
           console.log('message: ' + req);
           break;
 
         case 'stop':
         default:
           setDrivetrain(drivetrain, 0, 0);
-          // setLED(LED, 'server-pipe');
+          setLED(LED, 'server-pipe');
           console.log('message: ' + req);
       }
     });
