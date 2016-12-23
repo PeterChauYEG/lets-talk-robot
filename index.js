@@ -1,11 +1,11 @@
 // import robot api deps
 import five from 'johnny-five';
 import raspi from 'raspi-io';
-var SoftPWM = require('raspi-soft-pwm').SoftPWM;
+// import { SoftPWM } from 'raspi-soft-pwm';
 
 // import hardware interfaces
 import { setDrivetrain } from './drivers/drv8833';
-import { setLED } from './drivers/LED';
+// import { setLED } from './drivers/LED';
 
 // import camera process interface
 import fs from 'fs';
@@ -69,30 +69,28 @@ board.on('ready', function() {
   };
 
   // Software state LED configuration
-  const LED = {
-  	red: new SoftPWM({
-  		pin: 6,
-  		range: 255,
-  		frequency: 800
-  	}),
-  	green: new SoftPWM({
-  		pin: 10,
-  		range: 255,
-  		frequency: 800
-  	}),
-  	blue: new SoftPWM({
-  		pin: 11,
-  		range: 255,
-  		frequency: 800
-  	})
-  };
+  // const LED = {
+  // 	red: new SoftPWM({
+  // 		pin: 6,
+  // 		range: 255,
+  // 		frequency: 800
+  // 	}),
+  // 	green: new SoftPWM({
+  // 		pin: 10,
+  // 		range: 255,
+  // 		frequency: 800
+  // 	}),
+  // 	blue: new SoftPWM({
+  // 		pin: 11,
+  // 		range: 255,
+  // 		frequency: 800
+  // 	})
+  // };
 
   // initialize motors
   setDrivetrain(drivetrain, 1, 1);
   setDrivetrain(drivetrain, 0, 0);
 
-  // Set Software state LED to "board-ready"
-  // setLED(LED, 'board-ready');
   io.emit('log message', 'board ready');
   console.log('board ready');
 
@@ -103,8 +101,7 @@ board.on('ready', function() {
     sockets[socket.id] = socket;
     console.log("Total clients connected : " + Object.keys(sockets).length);
 
-    // Set Software state LED to "connected-to-server"
-    // setLED(LED, 'connected-to-server');
+    // log user connections
     io.emit('log message', 'a user has connected');
     console.log('a user connected');
 
@@ -123,13 +120,11 @@ board.on('ready', function() {
     socket.on('start-stream', function() {
       startStreaming(io);
       io.emit('log message', 'starting video stream');
-      // setLED(LED, 'streaming');
     });
 
     // log message to client
     socket.on('log message', function(msg) {
       io.emit('log message', msg);
-      // setLED(LED, 'server-pipe');
       console.log('message: ' + msg);
     });
 
@@ -139,32 +134,27 @@ board.on('ready', function() {
 
         case 'forward':
           setDrivetrain(drivetrain, 1, 1);
-          setLED(LED, 'server-pipe');
           console.log('message: ' + req);
           break;
 
         case 'rotate right':
           setDrivetrain(drivetrain, -1, 1);
-          setLED(LED, 'server-pipe');
           console.log('message: ' + req);
           break;
 
         case 'backwards':
           setDrivetrain(drivetrain, -1, -1);
-          setLED(LED, 'server-pipe');
           console.log('message: ' + req);
           break;
 
         case 'rotate left':
           setDrivetrain(drivetrain, 1, -1);
-          setLED(LED, 'server-pipe');
           console.log('message: ' + req);
           break;
 
         case 'stop':
         default:
           setDrivetrain(drivetrain, 0, 0);
-          setLED(LED, 'server-pipe');
           console.log('message: ' + req);
       }
     });
