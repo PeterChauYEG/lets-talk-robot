@@ -190,7 +190,7 @@ function startStreaming(io) {
     return;
   }
 
-  const args = ["-w", "640", "-h", "480", "-o", "./stream/image_stream.jpg", "-t", "999999999", "-tl", "100"];
+  const args = ["-w", "640", "-h", "480", "-o", "./stream/image_stream.jpg", "-t", "0", "-tl", "0"];
 
   // spawn live-stream process
   proc = spawn('raspistill', args);
