@@ -15,6 +15,7 @@ import { spawn } from 'child_process';
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
+var httpStream = require('http')
 var io = require('socket.io')(http);
 var path = require('path');
 const WebStreamerServer = require('./lib/raspivid'); // ************
@@ -171,7 +172,7 @@ http.listen(8080, function() {
 });
 
 // for live stream ???
-const server  = http.createServer(app);
+const server  = httpStream.createServer(app);
 const silence = new WebStreamerServer(server);
 
 server.listen(8081);
