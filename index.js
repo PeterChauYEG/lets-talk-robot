@@ -17,6 +17,7 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var path = require('path');
+const WebStreamerServer = require('./lib/raspivid'); // ************
 
 // setup hardware api
 var sockets = {};
@@ -31,6 +32,9 @@ let proc;
 const board = new five.Board({
   io: new raspi()
 });
+
+// serve h264-live-player from vendor REPLACE WITH NPM PACKAGE
+app.use(express.static(__dirname + '/vendor/dist'));
 
 // serve stream
 app.use('/stream', express.static(path.join(__dirname, '/stream')));
@@ -166,6 +170,12 @@ http.listen(8080, function() {
   console.log('listening on *:8080');
 });
 
+// for live stream ???
+const server  = http.createServer(app);
+const silence = new WebStreamerServer(server);
+
+server.listen(8081);
+
 function stopStreaming(io) {
   // kill live stream process
   if (Object.keys(sockets).length == 0) {
@@ -190,7 +200,7 @@ function startStreaming(io) {
     return;
   }
 
-  const args = ["-w", "640", "-h", "480", "-o", "./stream/image_stream.jpg", "-t", "0", "-tl", "0"];
+  const args = ["-w", "640", "-h", "480", "-o", "./stream/image_stream.jpg", "-t", "1", "-tl", "1", "--nopreview", "--exposure", "sports"];
 
   // spawn live-stream process
   proc = spawn('raspistill', args);
