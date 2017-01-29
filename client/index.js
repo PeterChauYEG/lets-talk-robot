@@ -15,16 +15,16 @@ socket.on('log message', function(msg) {
 });
 
 // start the stream
-socket.on('liveStream', function(url) {
-  $('#stream').attr('src', url);
-  $('#start-stream').hide();
-  return;
-});
+// socket.on('liveStream', function(url) {
+//   $('#stream').attr('src', url);
+//   $('#start-stream').hide();
+//   return;
+// });
 
 // ----------------------------
 // h264 live player
 var canvas = document.createElement("canvas");
-document.body.appendChild(canvas);
+document.getElementById("stream").appendChild(canvas);
 
 // Create h264 player
 var uri = "ws://192.168.0.23:8081";
