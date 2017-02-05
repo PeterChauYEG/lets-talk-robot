@@ -36,6 +36,37 @@ wsavc.connect(uri);
 //expose instance for button callbacks
 window.wsavc = wsavc;
 
+// --------------------------------------
+// W A S D controls
+//
+// declare keys
+const keys = [64, 83, 68, 70];
+
+// bind key down event listener to window
+window.addEventListener('keypress', (e) => {
+  let direction;
+
+  switch(e.keyCode) {
+    case 87:
+      direction = 'forward'
+      break
+    case 65:
+      direction = 'rotate left'
+      break
+    case 83:
+      direction = 'backwards'
+      break
+    case 68:
+      direction = 'rotate right'
+      break
+    case 32:
+    default:
+      direction = 'stop';
+  }
+
+  gpio(direction);
+})
+
 function gpio(req) {
   socket.emit('gpio', req);
   return;
