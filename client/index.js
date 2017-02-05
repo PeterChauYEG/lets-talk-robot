@@ -38,28 +38,25 @@ window.wsavc = wsavc;
 
 // --------------------------------------
 // W A S D controls
-//
-// declare keys
-const keys = [64, 83, 68, 70];
 
 // bind key down event listener to window
 window.addEventListener('keypress', (e) => {
   let direction;
 
-  switch(e.keyCode) {
-    case 87:
+  switch(e.key) {
+    case "w":
       direction = 'forward'
       break
-    case 65:
+    case "a":
       direction = 'rotate left'
       break
-    case 83:
+    case "s":
       direction = 'backwards'
       break
-    case 68:
+    case "d":
       direction = 'rotate right'
       break
-    case 32:
+    case " ":
     default:
       direction = 'stop';
   }
