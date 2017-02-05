@@ -64,6 +64,9 @@ window.addEventListener('keypress', (e) => {
   gpio(direction);
 })
 
+// bind keyup for better driving experience
+window.addEventListener('keyup', gpio('stop'))
+
 function gpio(req) {
   socket.emit('gpio', req);
   return;
