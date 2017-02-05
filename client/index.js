@@ -40,7 +40,7 @@ window.wsavc = wsavc;
 // W A S D controls
 
 // bind key down event listener to window
-window.addEventListener('keypress', (e) => {
+window.addEventListener('keydown', (e) => {
   let direction;
 
   switch(e.key) {
@@ -63,9 +63,6 @@ window.addEventListener('keypress', (e) => {
 
   gpio(direction);
 })
-
-// bind keyup for better driving experience
-window.addEventListener('keyup', gpio('stop'))
 
 function gpio(req) {
   socket.emit('gpio', req);
