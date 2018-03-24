@@ -12,7 +12,7 @@ import { setDrivetrain } from './drivers/drv8833';
 var sockets = {};
 
 // setup socket
-const socket = io('192.168.0.19:3000')
+const socket = io('192.168.0.19:8080')
 
 // Create board with gpio
 const board = new five.Board({
@@ -53,6 +53,7 @@ board.on('ready', function() {
 
   // handle gpio
   socket.on('gpio', function(msg) {
+    console.log({ msg })
     switch (msg) {
 
       case 'forward':
