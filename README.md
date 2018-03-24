@@ -1,8 +1,4 @@
-# l e t s t a l k - p i
-[Github](https://bitbucket.org/laboratoryone/letstalk-pi)
-*Laboratory One*
-
-a node client for the raspberry pi 2 that just wants to hang out with it's iot friends
+# lets-talk-robot
 
 ## LEDS
 Used to signal various software states:
