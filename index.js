@@ -12,7 +12,7 @@ import { setDrivetrain } from './drivers/drv8833';
 var sockets = {};
 
 // setup socket
-const socket = io('http://localhost:8080')
+const socket = io('192.168.0.19:8080')
 
 // Create board with gpio
 const board = new five.Board({
@@ -60,17 +60,17 @@ board.on('ready', function() {
         console.log('gpio: ' + msg);
         break;
 
-      case 'rotate right':
+      case 'right':
         setDrivetrain(drivetrain, -1, 1);
         console.log('gpio: ' + msg);
         break;
 
-      case 'backwards':
+      case 'backward':
         setDrivetrain(drivetrain, -1, -1);
         console.log('gpio: ' + msg);
         break;
 
-      case 'rotate left':
+      case 'left':
         setDrivetrain(drivetrain, 1, -1);
         console.log('gpio: ' + msg);
         break;
