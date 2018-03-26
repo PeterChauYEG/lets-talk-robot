@@ -53,33 +53,28 @@ board.on('ready', function() {
 
   // handle gpio
   socket.on('gpio', function(msg) {
-    console.log({ msg })
+    console.log('gpio:' + msg);
     switch (msg) {
 
       case 'forward':
         setDrivetrain(drivetrain, 1, 1);
-        console.log('gpio: ' + msg);
         break;
 
       case 'right':
         setDrivetrain(drivetrain, -1, 1);
-        console.log('gpio: ' + msg);
         break;
 
       case 'backward':
         setDrivetrain(drivetrain, -1, -1);
-        console.log('gpio: ' + msg);
         break;
 
       case 'left':
         setDrivetrain(drivetrain, 1, -1);
-        console.log('gpio: ' + msg);
         break;
 
       case 'stop':
       default:
         setDrivetrain(drivetrain, 0, 0);
-        console.log('gpio: ' + msg);
     }
   });
 });
