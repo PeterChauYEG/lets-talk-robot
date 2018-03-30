@@ -1,4 +1,4 @@
-export function setDrivetrain(drivetrain, AIN, BIN) {
+export function setDrivetrain(drivetrain, AIN, BIN, speed) {
 	// speed range is 0 - 255
 
 	// stop
@@ -9,26 +9,26 @@ export function setDrivetrain(drivetrain, AIN, BIN) {
 	}
 
 	if (AIN == 1 && BIN == 1) {
-		drivetrain.ain.forward(255);
-		drivetrain.bin.forward(255);
+		drivetrain.ain.forward(speed);
+		drivetrain.bin.forward(speed);
 		return;
 	}
 
 	if (AIN == -1 && BIN == -1) {
-		drivetrain.ain.reverse(255);
-		drivetrain.bin.reverse(255);
+		drivetrain.ain.reverse(speed);
+		drivetrain.bin.reverse(speed);
 		return;
 	}
 
 	if (AIN == 1 && BIN == -1) {
-		drivetrain.ain.forward(255);
-		drivetrain.bin.reverse(255);
+		drivetrain.ain.forward(speed);
+		drivetrain.bin.reverse(speed);
 		return;
 	}
 
 	if (AIN == -1 && BIN == 1) {
-		drivetrain.ain.reverse(255);
-		drivetrain.bin.forward(255);
+		drivetrain.ain.reverse(speed);
+		drivetrain.bin.forward(speed);
 		return;
 	}
 

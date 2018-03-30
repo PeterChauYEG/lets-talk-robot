@@ -55,24 +55,23 @@ board.on('ready', function() {
   socket.on('gpio', function(msg) {
     console.log({ msg })
     switch (msg) {
-
       case 'forward':
-        setDrivetrain(drivetrain, 1, 1);
+        setDrivetrain(drivetrain, 1, 1, 100);
         console.log('gpio: ' + msg);
         break;
 
       case 'right':
-        setDrivetrain(drivetrain, -1, 1);
+        setDrivetrain(drivetrain, -1, 1, 100);
         console.log('gpio: ' + msg);
         break;
 
       case 'backward':
-        setDrivetrain(drivetrain, -1, -1);
+        setDrivetrain(drivetrain, -1, -1, 100);
         console.log('gpio: ' + msg);
         break;
 
       case 'left':
-        setDrivetrain(drivetrain, 1, -1);
+        setDrivetrain(drivetrain, 1, -1, 100);
         console.log('gpio: ' + msg);
         break;
 
