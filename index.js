@@ -55,6 +55,11 @@ board.on('ready', function() {
   socket.on('gpio', function(msg) {
     console.log('gpio:' + msg);
     switch (msg) {
+      case 'boost':
+        setDrivetrain(drivetrain, 1, 1, 255);
+        console.log('gpio: ' + msg);
+        break;
+
       case 'forward':
         setDrivetrain(drivetrain, 1, 1, 100);
         console.log('gpio: ' + msg);
