@@ -61,22 +61,22 @@ board.on('ready', function() {
         break;
 
       case 'forward':
-        setDrivetrain(drivetrain, 1, 1, 100);
+        setDrivetrain(drivetrain, 1, 1, 128);
         console.log('gpio: ' + msg);
         break;
 
       case 'right':
-        setDrivetrain(drivetrain, -1, 1, 100);
+        setDrivetrain(drivetrain, -1, 1, 128);
         console.log('gpio: ' + msg);
         break;
 
       case 'backward':
-        setDrivetrain(drivetrain, -1, -1, 100);
+        setDrivetrain(drivetrain, -1, -1, 128);
         console.log('gpio: ' + msg);
         break;
 
       case 'left':
-        setDrivetrain(drivetrain, 1, -1, 100);
+        setDrivetrain(drivetrain, 1, -1, 128);
         console.log('gpio: ' + msg);
         break;
 
