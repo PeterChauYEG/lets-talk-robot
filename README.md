@@ -1,5 +1,13 @@
 # lets-talk-robot
 
+## Setup
+1. Clone this repo
+2. Install with: `yarn install`
+3. copy the `.env.template` as `.env` and set your environment vars
+
+## Development
+1. Start with: `npm start`
+
 ## LEDS
 Used to signal various software states:
 - board ready - yellow - pin 11

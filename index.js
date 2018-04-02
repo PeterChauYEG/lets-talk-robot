@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 // import robot deps
 import five from 'johnny-five';
 import raspi from 'raspi-io';
@@ -12,7 +14,7 @@ import { setDrivetrain } from './drivers/drv8833';
 var sockets = {};
 
 // setup socket
-const socket = io('http://192.168.0.19:8080')
+const socket = io(process.env.WEBSOCKET)
 
 // Create board with gpio
 const board = new five.Board({
