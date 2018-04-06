@@ -8,6 +8,11 @@
 ## Development
 1. Start with: `npm start`
 
+## Setup SSL
+- setup the RSA key pair on the client machine: `ssh-keygen -t rsa`
+- it should be located at `/home/<user>/.ssh/id_rsa.pub` and `/home/<user>/.ssh/id_rsa`
+- copy the key into the new machine: `ssh-copy-id pi@lets-talk.local`
+
 ## LEDS
 Used to signal various software states:
 - board ready - yellow - pin 11

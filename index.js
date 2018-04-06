@@ -50,41 +50,44 @@ board.on('ready', function() {
   setDrivetrain(drivetrain, 1, 1);
   setDrivetrain(drivetrain, 0, 0);
 
-  socket.emit('log message', 'board ready');
-  console.log('ready')
+  // report status
+  socket.emit('log message', 'robot online');
+  console.log('robot online')
 
   // handle gpio
   socket.on('gpio', function(msg) {
-    console.log('gpio:' + msg);
     switch (msg) {
       case 'boost':
         setDrivetrain(drivetrain, 1, 1, 255);
-        console.log('gpio: ' + msg);
         break;
 
       case 'forward':
         setDrivetrain(drivetrain, 1, 1, 128);
-        console.log('gpio: ' + msg);
         break;
 
       case 'right':
         setDrivetrain(drivetrain, -1, 1, 128);
-        console.log('gpio: ' + msg);
         break;
 
       case 'backward':
         setDrivetrain(drivetrain, -1, -1, 128);
-        console.log('gpio: ' + msg);
         break;
 
       case 'left':
         setDrivetrain(drivetrain, 1, -1, 128);
-        console.log('gpio: ' + msg);
         break;
 
       case 'stop':
       default:
         setDrivetrain(drivetrain, 0, 0);
     }
+    console.log('gpio: ' + msg);
+  });
+
+  // board shutdown
+  this.on('exit', function() {
+    // report status
+    socket.emit('log message', 'robot offine');
+    console.log('robot offline')
   });
 });
