@@ -51,7 +51,7 @@ board.on('ready', function() {
   setDrivetrain(drivetrain, 0, 0);
 
   // report status
-  socket.emit('log message', 'robot online');
+  socket.emit('robot status', 'online');
   console.log('robot online')
 
   // handle gpio
@@ -87,7 +87,7 @@ board.on('ready', function() {
   // board shutdown
   this.on('exit', function() {
     // report status
-    socket.emit('log message', 'robot offine');
+    socket.emit('robot status', 'offine');
     console.log('robot offline')
   });
 });
