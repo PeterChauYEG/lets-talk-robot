@@ -23,7 +23,7 @@ var data = {
 // log into the api
 var options = {
   body: JSON.stringify(data),
-  credentials: 'same-origin',
+  jar: true,
   uri: process.env.API + '/login',
   method: 'POST',
   headers: {
