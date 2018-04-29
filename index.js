@@ -8,6 +8,7 @@ import raspi from 'raspi-io'
 // import deps
 import io from 'socket.io-client'
 import request from 'request'
+import xmlhttprequest from 'xmlhttprequest'
 
 // import hardware interfaces
 import { setDrivetrain } from './drivers/drv8833'
@@ -17,6 +18,30 @@ dotenv.config()
 
 // cookie container
 var j = request.jar()
+
+/*
+ *  First I will patch the xmlhttprequest library that socket.io-client uses
+ *  internally to simulate XMLHttpRequest in the browser world.
+ */
+var originalRequest = require('xmlhttprequest').XMLHttpRequest;
+
+require('xmlhttprequest').XMLHttpRequest = function(){
+  originalRequest.apply(this, arguments);
+  this.setDisableHeaderCheck(true);
+  var stdOpen = this.open;
+
+  /*
+   * I will patch now open in order to set my cookie from the jar request.
+   */
+  this.open = function() {
+    stdOpen.apply(this, arguments);
+    var header = j.get({ url: process.env.API })
+      .map(function (c) {
+        return c.name + "=" + c.value;
+      }).join("; ");
+    this.setRequestHeader('cookie', header);
+  };
+};
 
 var data = {
   username: 'test',
