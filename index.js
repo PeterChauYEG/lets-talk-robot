@@ -23,7 +23,7 @@ var data = {
 // log into the api
 var options = {
   body: JSON.stringify(data),
-  uri: process.env.REACT_APP_API + '/login',
+  uri: process.env.API + '/login',
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ request(options, function (error, response, body) {
 })
 
 // setup socket
-const socket = io(process.env.WEBSOCKET)
+const socket = io(process.env.API)
 
 // Create board with gpio
 const board = new five.Board({
