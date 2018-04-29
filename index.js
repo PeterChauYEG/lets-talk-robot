@@ -15,6 +15,9 @@ import { setDrivetrain } from './drivers/drv8833'
 // config env vars
 dotenv.config()
 
+// cookie container
+var j = request.jar()
+
 var data = {
   username: 'test',
   password: 'test'
@@ -23,7 +26,7 @@ var data = {
 // log into the api
 var options = {
   body: JSON.stringify(data),
-  jar: true,
+  jar: j,
   uri: process.env.API + '/login',
   method: 'POST',
   headers: {
