@@ -7,12 +7,38 @@ import raspi from 'raspi-io'
 
 // import deps
 import io from 'socket.io-client'
+import request from 'request'
 
 // import hardware interfaces
 import { setDrivetrain } from './drivers/drv8833'
 
 // config env vars
 dotenv.config()
+
+var data = {
+  username: 'test',
+  password: 'test'
+}
+
+// log into the api
+var options = {
+  body: JSON.stringify(data),
+  uri: process.env.REACT_APP_API + '/login',
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  }
+}
+
+request(options, function (error, response, body) {
+  if (error) {
+    console.log({ error })
+    return
+  }
+
+  console.log({ body })
+})
 
 // setup socket
 const socket = io(process.env.WEBSOCKET)
