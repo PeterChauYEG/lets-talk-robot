@@ -47,7 +47,7 @@ request(options, function (error, response, body) {
   const cookie = j.getCookies(process.env.API)
   console.log({cookie})
   // setup socket
-  const socket = io(process.env.API, extraHeaders: { cookie })
+  const socket = io(process.env.API, { extraHeaders: { cookie } })
 
   // Create board with gpio
   const board = new five.Board({
